@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/marckesin/DEV-Challenge#readme",
   "dependencies": {
-    "csv": "^6.0.5",
     "lodash": "^4.17.21"
   }
 }

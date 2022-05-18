@@ -11,7 +11,12 @@ const formatPhone = phone => {
   return phone.replace(/\D/g, "");
 };
 
-// Salva um objeto para um arquivo .json
+// Extrai email da string
+const formatEmail = email => {
+  return email.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/g);
+};
+
+// Salva um objeto para o arquivo output.json
 const saveJSON = jsonData => {
   fs.writeFile("output.json", jsonData, err => {
     if (err) {
@@ -20,6 +25,7 @@ const saveJSON = jsonData => {
   });
 };
 
+// Leitura e extração de dados
 fs.readFile("./input.csv", (err, data) => {
   if (err) {
     return console.log(err);
@@ -49,13 +55,17 @@ fs.readFile("./input.csv", (err, data) => {
         obj[header1] =
           rows[i][j] === "1" || rows[i][j] === "yes" ? true : false;
       } else if (header1 === "email" || header1 === "phone") {
+        // Agrupa os campos sinalizados com phone e email em "addresses"
         const address = {
           type: header1,
           tags: header3 ? [header2, header3] : [header2],
           address:
-            header1 === "phone" ? `55${formatPhone(rows[i][j])}` : rows[i][j],
+            header1 === "phone"
+              ? `55${formatPhone(rows[i][j])}`
+              : formatEmail(rows[i][j]),
         };
 
+        // Descarta phones e emails incompletos
         if (address.type === "phone" && address.address.length === 13) {
           addresses.push(address);
         } else if (address.type === "email" && address.address) {
@@ -65,15 +75,21 @@ fs.readFile("./input.csv", (err, data) => {
 
         obj.addresses = addresses;
       } else if (header1 === "group") {
-        const r = rows[i][j].replace(/\W/g, " ");
+        // Agrupa os campos sinalizados com group em "groups"
+        const group = removePunctuation(rows[i][j]);
 
-        groups.push(rows[i][j]);
-        obj.groups = groups;
+        if (group) {
+          groups.push(group);
+        }
+
+        obj.groups = _.flatMapDeep(groups);
       } else {
-        obj[columns[j]] = rows[i][j];
+        obj[header1] = rows[i][j];
       }
     }
     jsonObj.push(obj);
   }
+
+  // Converte para output.json
   saveJSON(JSON.stringify(jsonObj));
 });
