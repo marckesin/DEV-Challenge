@@ -1,0 +1,29 @@
+{
+  "name": "dev-challenge",
+  "version": "1.0.0",
+  "description": "Dev challenge",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marckesin/DEV-Challenge.git"
+  },
+  "keywords": [
+    "challenge"
+  ],
+  "author": "Ronaldo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/marckesin/DEV-Challenge/issues"
+  },
+  "homepage": "https://github.com/marckesin/DEV-Challenge#readme",
+  "dependencies": {
+    "csv": "^6.0.5",
+    "lodash": "^4.17.21"
+  }
+}
